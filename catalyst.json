@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "source": "functions",
+    "targets": [
+      "fir-ingestion",
+      "entity-linking",
+      "chat-query",
+      "risk-scoring",
+      "anomaly-detection",
+      "report-generator",
+      "alerts"
+    ]
+  }
+}

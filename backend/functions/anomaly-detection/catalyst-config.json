@@ -1,0 +1,10 @@
+{
+  "deployment": {
+    "name": "anomaly-detection",
+    "stack": "node18",
+    "type": "basic-io"
+  },
+  "execution": {
+    "main": "index.js"
+  }
+}

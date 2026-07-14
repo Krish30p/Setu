@@ -1,0 +1,15 @@
+{
+  "name": "setu-backend",
+  "version": "1.0.0",
+  "description": "SETU Platform API Gateway + Serverless Function Handlers",
+  "main": "server.cjs",
+  "scripts": {
+    "start": "node server.cjs",
+    "dev": "node server.cjs"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

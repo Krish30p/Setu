@@ -1,0 +1,9 @@
+{
+  "name": "anomaly-detection",
+  "version": "1.0.0",
+  "description": "Catalyst Serverless Function for MO Pattern-Break Anomaly Detection",
+  "main": "index.js",
+  "dependencies": {
+    "zcatalyst-sdk-node": "^2.5.0"
+  }
+}
