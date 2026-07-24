@@ -1,260 +1,46 @@
 {
   "tables": {
-    "locations": [
-      {
-        "location_id": "LOC_TUMKUR_TUMKUR_TOWN",
-        "station_name": "Tumkur Town",
-        "district_name": "Tumkur",
-        "latitude": 13.3409,
-        "longitude": 77.1006
-      },
-      {
-        "location_id": "LOC_MYSURU_MYSURU_CITY",
-        "station_name": "Mysuru City",
-        "district_name": "Mysuru",
-        "latitude": 12.2958,
-        "longitude": 76.6394
-      },
-      {
-        "location_id": "LOC_MANDYA_MANDYA_CENTRAL",
-        "station_name": "Mandya Central",
-        "district_name": "Mandya",
-        "latitude": null,
-        "longitude": null,
-        "socio_economic_indicators": "{\"urbanization_index\":0.5}"
-      }
-    ],
-    "firs": [
-      {
-        "fir_id": "FIR-2024-0001",
-        "filing_date": "2024-06-01 10:30:00",
-        "station_id": "LOC_TUMKUR_TUMKUR_TOWN",
-        "district_id": "Tumkur",
-        "raw_text": "Chain snatched.",
-        "crime_type": "chain-snatching",
-        "status": "Under investigation"
-      },
-      {
-        "fir_id": "FIR-2024-0002",
-        "filing_date": "2024-06-10 16:45:00",
-        "station_id": "LOC_MYSURU_MYSURU_CITY",
-        "district_id": "Mysuru",
-        "raw_text": "Bike stolen.",
-        "crime_type": "vehicle-theft",
-        "status": "Under investigation"
-      },
-      {
-        "fir_id": "FIR-2024-0117",
-        "filing_date": "2024-07-02 22:15:00",
-        "station_id": "LOC_TUMKUR_TUMKUR_TOWN",
-        "district_id": "Tumkur",
-        "raw_text": "House broken into.",
-        "crime_type": "chain-snatching",
-        "status": "Under investigation"
-      },
-      {
-        "fir_id": "FIR-2024-9999",
-        "filing_date": "2024-07-14 11:30:00",
-        "station_id": "LOC_MANDYA_MANDYA_CENTRAL",
-        "district_id": "Mandya",
-        "raw_text": "Suresh Kumar was caught driving a stolen motor vehicle in Mandya.",
-        "crime_type": "vehicle-theft",
-        "status": "Under investigation"
-      }
-    ],
+    "locations": [],
+    "firs": [],
     "offenders": [
       {
-        "offender_id": "OFF_MOHD_RAFIQ",
+        "offender_id": "OFF_RAFIQ",
         "full_name": "Mohd Rafiq",
-        "risk_score": 0.72
-      },
-      {
-        "offender_id": "OFF_KUMAR",
-        "full_name": "Kumar",
         "gender": null,
         "age_at_first_offense": null,
-        "risk_score": null,
-        "risk_score_last_updated": "2026-07-14 07:28:51",
+        "risk_score": 0.72,
+        "risk_score_last_updated": "2026-07-14 10:00:00",
+        "bail_status": null
+      },
+      {
+        "offender_id": "OFF_RAMESH",
+        "full_name": "Ramesh Kumar",
+        "gender": null,
+        "age_at_first_offense": null,
+        "risk_score": 0.16,
+        "risk_score_last_updated": "2026-07-14 10:00:00",
         "bail_status": null
       }
     ],
-    "offender_aliases": [
-      {
-        "alias_id": "ALIAS_OFF_KUMAR_KUMAR",
-        "offender_id": "OFF_KUMAR",
-        "alias_name": "Kumar"
-      }
-    ],
-    "offender_fir_link": [
-      {
-        "id": "LINK_OFF_KUMAR_FIR-2024-9999",
-        "offender_id": "OFF_KUMAR",
-        "fir_id": "FIR-2024-9999",
-        "role": "primary"
-      }
-    ],
+    "offender_aliases": [],
+    "offender_fir_link": [],
     "offender_network_link": [],
     "witnesses": [],
     "witness_fir_link": [],
     "witness_proximity_link": [],
-    "mo_tags": [
-      {
-        "mo_id": "chain_snatching",
-        "category": "Property Crime",
-        "tag_type": "primary",
-        "description": "Theft of jewelry/valuables from a person"
-      },
-      {
-        "mo_id": "house_breaking_day",
-        "category": "Property Crime",
-        "tag_type": "primary",
-        "description": "Burglary during daylight hours"
-      },
-      {
-        "mo_id": "house_breaking_night",
-        "category": "Property Crime",
-        "tag_type": "primary",
-        "description": "Burglary during night hours"
-      },
-      {
-        "mo_id": "vehicle_theft",
-        "category": "Property Crime",
-        "tag_type": "primary",
-        "description": "Theft of a motor vehicle"
-      },
-      {
-        "mo_id": "pickpocketing",
-        "category": "Property Crime",
-        "tag_type": "primary",
-        "description": "Theft from a person's belongings"
-      },
-      {
-        "mo_id": "atm_related_theft",
-        "category": "Property Crime",
-        "tag_type": "primary",
-        "description": "Theft or fraud involving ATM machines/cards"
-      },
-      {
-        "mo_id": "online_fraud",
-        "category": "Financial Crime",
-        "tag_type": "primary",
-        "description": "Digital/cyber-enabled financial fraud"
-      },
-      {
-        "mo_id": "ponzi_investment_fraud",
-        "category": "Financial Crime",
-        "tag_type": "primary",
-        "description": "Fraudulent investment schemes"
-      },
-      {
-        "mo_id": "money_laundering",
-        "category": "Financial Crime",
-        "tag_type": "primary",
-        "description": "Layering/structuring of illicit funds"
-      },
-      {
-        "mo_id": "identity_theft_financial",
-        "category": "Financial Crime",
-        "tag_type": "primary",
-        "description": "Use of stolen identity"
-      },
-      {
-        "mo_id": "repeat_offender_cluster",
-        "category": "Organized / Gang Activity",
-        "tag_type": "primary",
-        "description": "Coordinated group activity"
-      },
-      {
-        "mo_id": "cross_district_operation",
-        "category": "Organized / Gang Activity",
-        "tag_type": "primary",
-        "description": "Crimes committed across multiple districts"
-      },
-      {
-        "mo_id": "recruitment_pattern",
-        "category": "Organized / Gang Activity",
-        "tag_type": "primary",
-        "description": "Indicators of recruitment into network"
-      },
-      {
-        "mo_id": "assault",
-        "category": "Violent Crime",
-        "tag_type": "primary",
-        "description": "Physical assault"
-      },
-      {
-        "mo_id": "armed_robbery",
-        "category": "Violent Crime",
-        "tag_type": "primary",
-        "description": "Robbery involving a weapon"
-      },
-      {
-        "mo_id": "extortion",
-        "category": "Violent Crime",
-        "tag_type": "primary",
-        "description": "Threat-based coercion for money/property"
-      },
-      {
-        "mo_id": "daytime",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Daytime temporal marker"
-      },
-      {
-        "mo_id": "nighttime",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Nighttime temporal marker"
-      },
-      {
-        "mo_id": "solo",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Offense committed alone"
-      },
-      {
-        "mo_id": "group",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Offense committed in a group"
-      },
-      {
-        "mo_id": "weapon_used",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Weapon present"
-      },
-      {
-        "mo_id": "no_weapon",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "No weapon present"
-      },
-      {
-        "mo_id": "repeat_location",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Occurrence at historically linked location"
-      },
-      {
-        "mo_id": "new_location",
-        "category": "Behavioral/Temporal Modifiers",
-        "tag_type": "modifier",
-        "description": "Occurrence at new location"
-      }
-    ],
+    "mo_tags": [],
     "fir_mo_link": [],
     "explainability_records": [
       {
-        "record_id": "EVID_FIR-2024-9999_INGEST",
-        "output_type": "entity_link",
-        "function_name": "fir-ingestion",
+        "record_id": "EVID_ALERT_OFF_RAFIQ_1784920647448",
+        "output_type": "alert_notification",
+        "function_name": "alerts",
         "model_version": "v1.0",
-        "source_fir_ids": "[\"FIR-2024-9999\"]",
-        "matched_fields": "[{\"field\":\"offender_name\",\"value_pattern\":\"Kumar\",\"confidence\":0.95}]",
-        "reasoning_summary": "Entities and MO tags extracted confidently from raw FIR narrative of FIR-2024-9999.",
-        "confidence_score": 0.9,
-        "timestamp": "2026-07-14 07:28:52",
+        "source_fir_ids": "[]",
+        "matched_fields": "[{\"field\":\"risk_score\",\"value_pattern\":\"0.72\",\"confidence\":1}]",
+        "reasoning_summary": "High risk score alert triggered for offender Mohd Rafiq (OFF_RAFIQ). Current risk score 0.72 exceeds threshold of 0.7. Email dispatch initiated.",
+        "confidence_score": 1,
+        "timestamp": "2026-07-24 19:17:27",
         "verification_status": "unverified"
       }
     ],
@@ -264,38 +50,8 @@
     "offender_vehicle_link": []
   },
   "nosql": {
-    "fir_raw_documents": [
-      {
-        "fir_id": "FIR-2024-9999",
-        "raw_text_english": "Suresh Kumar was caught driving a stolen motor vehicle in Mandya.",
-        "raw_text_kannada": "",
-        "ocr_source": false,
-        "extraction_metadata": {
-          "extraction_model_version": "v1.0",
-          "extraction_timestamp": "2026-07-14T07:28:52.000Z",
-          "extracted_entities": [
-            {
-              "type": "PERSON_NAME",
-              "value": "Kumar",
-              "normalized_value": "Mohd Rafiq",
-              "role": "accused",
-              "confidence": 0.95,
-              "source_span": [
-                7,
-                12
-              ]
-            }
-          ]
-        }
-      }
-    ],
-    "case_type_attributes": [
-      {
-        "fir_id": "FIR-2024-9999",
-        "crime_type": "vehicle-theft",
-        "attributes": {}
-      }
-    ],
+    "fir_raw_documents": [],
+    "case_type_attributes": [],
     "conversation_history": [],
     "anomaly_flags": []
   }

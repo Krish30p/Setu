@@ -11,7 +11,7 @@ module.exports = async (context, basicIO) => {
         }
 
         const body = JSON.parse(context.body);
-        const { query, language = 'en', session_id = 'SESSION_MOCK' } = body;
+        const { query, role = '', district = '', language = 'en', session_id = 'SESSION_MOCK' } = body;
 
         if (!query) {
             basicIO.write(JSON.stringify({ status: 'error', message: 'Missing query string' }));
@@ -129,6 +129,11 @@ module.exports = async (context, basicIO) => {
             }
         }
 
+        // ponytail: RBAC scoping for Chat RAG search. Investigator is restricted to assigned district. Analyst/Supervisor get cross-district access.
+        if (role.toLowerCase() === 'investigator' && district) {
+            retrievedContext = retrievedContext.filter(c => (c.district || '').toLowerCase() === district.toLowerCase());
+        }
+
         // 3. Generate Answer (QuickML RAG vs Structured Template Fallback)
         let answerText = "";
         const quickmlEndpoint = process.env.QUICKML_RAG_ENDPOINT;
@@ -139,10 +144,10 @@ module.exports = async (context, basicIO) => {
                 answerText = await adapter.quickml.executeLLM(quickmlEndpoint, prompt);
             } catch (err) {
                 console.error("QuickML RAG query failed, falling back: ", err);
-                answerText = fallbackRAGAnswer(query, retrievedContext);
+                answerText = fallbackRAGAnswer(query, retrievedContext, role, district);
             }
         } else {
-            answerText = fallbackRAGAnswer(query, retrievedContext);
+            answerText = fallbackRAGAnswer(query, retrievedContext, role, district);
         }
 
         // 4. Create Explainability Record
@@ -167,7 +172,7 @@ module.exports = async (context, basicIO) => {
         await adapter.nosql.insertItem("conversation_history", {
             session_id,
             user_id: 'INV_MOCK',
-            role: 'investigator',
+            role: role || 'investigator',
             messages: [
                 { turn: 1, speaker: 'user', text: query, language, timestamp: new Date().toISOString() },
                 { turn: 2, speaker: 'system', text: answerText, evidence_refs: [recordId], timestamp: new Date().toISOString() }
@@ -187,8 +192,11 @@ module.exports = async (context, basicIO) => {
     context.close();
 };
 
-function fallbackRAGAnswer(query, contextList) {
+function fallbackRAGAnswer(query, contextList, role = '', district = '') {
     if (contextList.length === 0) {
+        if (role.toLowerCase() === 'investigator' && district) {
+            return `No matching records found within your assigned jurisdiction (${district}). Cross-district record access requires an Analyst or Supervisor operational role.`;
+        }
         return "I could not find any cases in the database matching the criteria in your query.";
     }
     

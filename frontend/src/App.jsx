@@ -96,13 +96,13 @@ export default function App() {
 
             {/* Dynamic tab contents */}
             <main className="main-content">
-                {currentTab === 'chat' && <ChatPage />}
+                {currentTab === 'chat' && <ChatPage auth={auth} />}
                 
-                {currentTab === 'graph' && <NetworkGraphPage />}
+                {currentTab === 'graph' && <NetworkGraphPage auth={auth} />}
 
-                {currentTab === 'map' && <HotspotMapPage />}
+                {currentTab === 'map' && <HotspotMapPage auth={auth} />}
 
-                {currentTab === 'analytics' && <AnalyticsPage />}
+                {currentTab === 'analytics' && <AnalyticsPage auth={auth} />}
             </main>
         </div>
     );

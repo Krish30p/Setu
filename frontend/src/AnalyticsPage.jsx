@@ -4,7 +4,7 @@ import { Chart, registerables } from 'chart.js';
 // Register Chart.js components
 Chart.register(...registerables);
 
-export default function AnalyticsPage() {
+export default function AnalyticsPage({ auth }) {
     const barChartRef = useRef(null);
     const pieChartRef = useRef(null);
     const barChartInstance = useRef(null);
@@ -23,7 +23,8 @@ export default function AnalyticsPage() {
     const loadAnalyticsData = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:5001/api/get-graph');
+            const query = auth?.role ? `?role=${encodeURIComponent(auth.role)}&district=${encodeURIComponent(auth.district || '')}` : '';
+            const res = await fetch(`http://localhost:5001/api/get-graph${query}`);
             const data = await res.json();
             if (data.status === 'success') {
                 const firList = data.firs || [];

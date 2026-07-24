@@ -95,7 +95,7 @@ class MockCatalystDataStore extends DataStoreClient {
 class MockSmartBrowzClient extends SmartBrowzClient {
     async generatePDF(htmlContent) {
         console.log("[MOCK SmartBrowz] Generating PDF binary from HTML string content");
-        return Buffer.from("%PDF-1.4 Mock PDF Data Content");
+        return Buffer.from(`%PDF-1.4 Mock PDF Data Content:\n${htmlContent}`);
     }
 }
 

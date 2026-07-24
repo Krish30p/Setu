@@ -4,8 +4,8 @@ const path = require('path');
 // Reconciled configuration switch: Use mock adapter
 process.env.USE_MOCK = 'true';
 
-const ingestHandler = require('../fir-ingestion/index.js');
-const DB_FILE = path.join(__dirname, '..', '..', 'test_db.json');
+const ingestHandler = require('../backend/functions/fir-ingestion/index.js');
+const DB_FILE = path.join(__dirname, '..', 'backend', 'test_db.json');
 
 async function runTest() {
     console.log("=================================================");

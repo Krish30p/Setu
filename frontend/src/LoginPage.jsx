@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 export default function LoginPage({ onLogin }) {
+    const [username, setUsername] = useState('K_PATEL_5601');
     const [role, setRole] = useState('investigator');
     const [district, setDistrict] = useState('Tumkur');
 
@@ -8,7 +9,7 @@ export default function LoginPage({ onLogin }) {
         e.preventDefault();
         onLogin({
             authenticated: true,
-            username: 'K_PATEL_5601',
+            username: username,
             role: role,
             district: district
         });
@@ -30,7 +31,8 @@ export default function LoginPage({ onLogin }) {
                         type="text" 
                         className="chat-input" 
                         style={{ width: '100%', boxSizing: 'border-box' }}
-                        defaultValue="K_PATEL_5601"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </div>

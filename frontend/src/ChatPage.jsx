@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function ChatPage() {
+export default function ChatPage({ auth }) {
     const [messages, setMessages] = useState([
         {
             id: 'init',
@@ -12,6 +12,38 @@ export default function ChatPage() {
     const [inputText, setInputText] = useState('');
     const [selectedEvidence, setSelectedEvidence] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [exportingPdf, setExportingPdf] = useState(false);
+
+    const handleExportPDF = async () => {
+        if (messages.length === 0) return;
+        setExportingPdf(true);
+        try {
+            const res = await fetch('http://localhost:5001/api/report-generator', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'chat',
+                    title: 'SETU Investigation Chat Transcript',
+                    generated_by: auth?.username || 'K_PATEL_5601',
+                    messages: messages
+                })
+            });
+            const data = await res.json();
+            if (data.status === 'success' && data.pdf_base64) {
+                const blob = new Blob([Uint8Array.from(atob(data.pdf_base64), c => c.charCodeAt(0))], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `chat_transcript_${Date.now()}.pdf`;
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+        } catch (e) {
+            console.error("PDF Export failed:", e);
+        } finally {
+            setExportingPdf(false);
+        }
+    };
 
     // Suggested queries for demo execution per demo-script.md
     const suggestedQueries = [
@@ -33,26 +65,19 @@ export default function ChatPage() {
         try {
             // Frontend keyword-based query routing (simplification for local simulation)
             let apiEndpoint = 'chat-query';
-            let requestBody = { query: text };
+            let requestBody = { 
+                query: text,
+                role: auth?.role || 'investigator',
+                district: auth?.district || 'Tumkur'
+            };
 
-            const isRiskQuery = text.toLowerCase().includes('risk score') || 
-                                text.toLowerCase().includes('off_mohd_rafiq') || 
-                                text.toLowerCase().includes('off_ramesh') ||
-                                text.toLowerCase().includes('off_rafiq');
+            const isRiskQuery = text.toLowerCase().includes('risk score');
                                 
             const isAnomalyQuery = text.toLowerCase().includes('anomalies') || 
-                                   text.toLowerCase().includes('modus operandi');
+                                   text.toLowerCase().includes('modus operandi') ||
+                                   text.toLowerCase().includes('anomaly');
 
-            if (isRiskQuery) {
-                apiEndpoint = 'risk-scoring';
-                let targetId = 'OFF_MOHD_RAFIQ';
-                if (text.toLowerCase().includes('off_ramesh')) {
-                    targetId = 'OFF_RAMESH';
-                } else if (text.toLowerCase().includes('off_rafiq')) {
-                    targetId = 'OFF_RAFIQ';
-                }
-                requestBody = { offender_id: targetId, fir_id: targetId === 'OFF_MOHD_RAFIQ' ? 'FIR-2024-0001' : 'FIR-004' };
-            } else if (isAnomalyQuery) {
+            if (isAnomalyQuery) {
                 apiEndpoint = 'anomaly-detection';
                 let targetId = 'OFF_MOHD_RAFIQ';
                 if (text.toLowerCase().includes('off_ramesh')) {
@@ -60,7 +85,26 @@ export default function ChatPage() {
                 } else if (text.toLowerCase().includes('off_rafiq')) {
                     targetId = 'OFF_RAFIQ';
                 }
-                requestBody = { offender_id: targetId, fir_id: targetId === 'OFF_MOHD_RAFIQ' ? 'FIR-2024-0117' : 'FIR-004' };
+                requestBody = { 
+                    offender_id: targetId, 
+                    fir_id: targetId === 'OFF_MOHD_RAFIQ' ? 'FIR-2024-0117' : 'FIR-004',
+                    role: auth?.role || 'investigator',
+                    district: auth?.district || 'Tumkur'
+                };
+            } else if (isRiskQuery) {
+                apiEndpoint = 'risk-scoring';
+                let targetId = 'OFF_MOHD_RAFIQ';
+                if (text.toLowerCase().includes('off_ramesh')) {
+                    targetId = 'OFF_RAMESH';
+                } else if (text.toLowerCase().includes('off_rafiq')) {
+                    targetId = 'OFF_RAFIQ';
+                }
+                requestBody = { 
+                    offender_id: targetId, 
+                    fir_id: targetId === 'OFF_MOHD_RAFIQ' ? 'FIR-2024-0001' : 'FIR-004',
+                    role: auth?.role || 'investigator',
+                    district: auth?.district || 'Tumkur'
+                };
             }
 
             const res = await fetch(`http://localhost:5001/api/${apiEndpoint}`, {
@@ -148,11 +192,30 @@ export default function ChatPage() {
         <div className="chat-page-container">
             {/* Left Hand: Glassmorphic conversational window */}
             <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ marginBottom: '15px' }}>
-                    <h3 style={{ margin: '0 0 5px 0' }}>SETU Conversational Search</h3>
-                    <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>
-                        Query regional intelligence database in English / Kannada.
-                    </p>
+                <div style={{ marginBottom: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                        <h3 style={{ margin: '0 0 5px 0' }}>SETU Conversational Search</h3>
+                        <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-muted)' }}>
+                            Query regional intelligence database in English / Kannada.
+                        </p>
+                    </div>
+                    <button 
+                        onClick={handleExportPDF}
+                        disabled={exportingPdf}
+                        style={{
+                            background: 'linear-gradient(135deg, #7f5af0, #2cb67d)',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '6px',
+                            padding: '8px 14px',
+                            fontSize: '12px',
+                            fontWeight: '600',
+                            cursor: 'pointer',
+                            boxShadow: '0 2px 8px rgba(127, 90, 240, 0.3)'
+                        }}
+                    >
+                        {exportingPdf ? 'Exporting PDF...' : '📄 Save Conversation as PDF'}
+                    </button>
                 </div>
 
                 <div className="chat-window">

@@ -1,8 +1,8 @@
+const path = require('path');
+const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -28,18 +28,23 @@ app.post('/api/seed-graph', (req, res) => {
                 firs: [
                     { fir_id: 'FIR-2024-0001', filing_date: '2024-06-01 10:30:00', station_id: 'LOC_TUMKUR_TUMKUR_TOWN', district_id: 'Tumkur', raw_text: 'Chain-snatching reported near bus terminal.', crime_type: 'chain-snatching', status: 'Under investigation' },
                     { fir_id: 'FIR-2024-0002', filing_date: '2024-06-10 16:45:00', station_id: 'LOC_MYSURU_MYSURU_CITY', district_id: 'Mysuru', raw_text: 'Two-wheeler stolen from hospital parking.', crime_type: 'vehicle-theft', status: 'Under investigation' },
+                    { fir_id: 'FIR-2024-0003', filing_date: '2024-06-15 14:20:00', station_id: 'LOC_TUMKUR_TUMKUR_TOWN', district_id: 'Tumkur', raw_text: 'Daytime chain snatching reported near market complex.', crime_type: 'chain-snatching', status: 'Under investigation' },
                     { fir_id: 'FIR-2024-0117', filing_date: '2024-07-02 22:15:00', station_id: 'LOC_TUMKUR_TUMKUR_TOWN', district_id: 'Tumkur', raw_text: 'Locked house broken into during night hours.', crime_type: 'house-breaking-night', status: 'Under investigation' }
                 ],
                 offenders: [
                     { offender_id: 'OFF_MOHD_RAFIQ', full_name: 'Mohd Rafiq', gender: null, age_at_first_offense: null, risk_score: 0.72, risk_score_last_updated: '2026-07-14 10:00:00', bail_status: null },
-                    { offender_id: 'OFF_RAMESH_KUMAR', full_name: 'Ramesh Kumar', gender: null, age_at_first_offense: null, risk_score: 0.35, risk_score_last_updated: '2026-07-14 10:00:00', bail_status: null }
+                    { offender_id: 'OFF_RAMESH_KUMAR', full_name: 'Ramesh Kumar', gender: null, age_at_first_offense: null, risk_score: 0.35, risk_score_last_updated: '2026-07-14 10:00:00', bail_status: null },
+                    { offender_id: 'OFF_SURESH_GOWDA', full_name: 'Suresh Gowda', gender: null, age_at_first_offense: null, risk_score: 0.58, risk_score_last_updated: '2026-07-14 10:00:00', bail_status: null }
                 ],
                 offender_aliases: [
                     { alias_id: 'ALIAS_OFF_MOHD_RAFIQ_MD__RAFIQUE', offender_id: 'OFF_MOHD_RAFIQ', alias_name: 'Md. Rafique' }
                 ],
                 offender_fir_link: [
                     { id: 'L1', offender_id: 'OFF_MOHD_RAFIQ', fir_id: 'FIR-2024-0001', role: 'primary' },
-                    { id: 'L2', offender_id: 'OFF_RAMESH_KUMAR', fir_id: 'FIR-2024-0001', role: 'co-accused' }
+                    { id: 'L2', offender_id: 'OFF_RAMESH_KUMAR', fir_id: 'FIR-2024-0001', role: 'co-accused' },
+                    { id: 'L3', offender_id: 'OFF_SURESH_GOWDA', fir_id: 'FIR-2024-0002', role: 'primary' },
+                    { id: 'L4', offender_id: 'OFF_MOHD_RAFIQ', fir_id: 'FIR-2024-0003', role: 'primary' },
+                    { id: 'L5', offender_id: 'OFF_MOHD_RAFIQ', fir_id: 'FIR-2024-0117', role: 'primary' }
                 ],
                 offender_network_link: [
                     { id: 'EDGE_OFF_MOHD_RAFIQ_OFF_RAMESH_KUMAR_FIR-2024-0001', offender_id_a: 'OFF_MOHD_RAFIQ', offender_id_b: 'OFF_RAMESH_KUMAR', relationship_type: 'co-accused', source_fir_id: 'FIR-2024-0001' }
@@ -82,15 +87,37 @@ app.post('/api/seed-graph', (req, res) => {
                 witnesses: [],
                 witness_fir_link: [],
                 witness_proximity_link: [],
-                mo_tags: [],
-                fir_mo_link: []
+                mo_tags: [
+                    { mo_id: 'MO_CHAIN_SNATCHING', description: 'Daytime chain-snatching targeting pedestrians' },
+                    { mo_id: 'MO_TWO_WHEELER', description: 'Escape via stolen/unregistered two-wheeler' },
+                    { mo_id: 'MO_HOUSE_BREAKING_NIGHT', description: 'Night-time forced entry house breaking' },
+                    { mo_id: 'MO_LOCK_SNIPPING', description: 'Cutting heavy door padlocks with bolt cutters' }
+                ],
+                fir_mo_link: [
+                    { id: 'FML1', fir_id: 'FIR-2024-0001', mo_id: 'MO_CHAIN_SNATCHING' },
+                    { id: 'FML2', fir_id: 'FIR-2024-0001', mo_id: 'MO_TWO_WHEELER' },
+                    { id: 'FML3', fir_id: 'FIR-2024-0003', mo_id: 'MO_CHAIN_SNATCHING' },
+                    { id: 'FML4', fir_id: 'FIR-2024-0003', mo_id: 'MO_TWO_WHEELER' },
+                    { id: 'FML5', fir_id: 'FIR-2024-0117', mo_id: 'MO_HOUSE_BREAKING_NIGHT' },
+                    { id: 'FML6', fir_id: 'FIR-2024-0117', mo_id: 'MO_LOCK_SNIPPING' }
+                ]
             },
             nosql: {
                 fir_raw_documents: [],
                 case_type_attributes: [],
                 conversation_history: [],
                 anomaly_flags: [
-                    { flag_id: 'ANOM_OFF_MOHD_RAFIQ_1', offender_id: 'OFF_MOHD_RAFIQ', flag_type: 'mo_shift', confidence: 0.85 }
+                    {
+                        flag_id: 'ANOM_OFF_MOHD_RAFIQ_1',
+                        offender_id: 'OFF_MOHD_RAFIQ',
+                        flag_type: 'mo_shift',
+                        description: 'Shift in Modus Operandi detected for offender OFF_MOHD_RAFIQ. Historical pattern: [MO_CHAIN_SNATCHING, MO_TWO_WHEELER]. New case FIR-2024-0117 patterns: [MO_HOUSE_BREAKING_NIGHT, MO_LOCK_SNIPPING].',
+                        prior_mo_tags: ['MO_CHAIN_SNATCHING', 'MO_TWO_WHEELER'],
+                        current_mo_tags: ['MO_HOUSE_BREAKING_NIGHT', 'MO_LOCK_SNIPPING'],
+                        confidence: 1.0,
+                        detected_at: '2026-07-14 10:00:00',
+                        verification_status: 'unverified'
+                    }
                 ]
             }
         };
@@ -101,26 +128,71 @@ app.post('/api/seed-graph', (req, res) => {
     }
 });
 
-// Graph Data Retrieval Endpoint
+// Graph Data Retrieval Endpoint with RBAC Scoping
 app.get('/api/get-graph', (req, res) => {
     try {
-        if (fs.existsSync(DB_FILE)) {
-            const dbData = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
-            res.json({
-                status: 'success',
-                offenders: dbData.tables.offenders || [],
-                aliases: dbData.tables.offender_aliases || [],
-                network_links: dbData.tables.offender_network_link || [],
-                phone_links: dbData.tables.offender_phone_link || [],
-                vehicle_links: dbData.tables.offender_vehicle_link || [],
-                anomaly_flags: dbData.nosql.anomaly_flags || [],
-                explainability_records: dbData.tables.explainability_records || [],
-                locations: dbData.tables.locations || [],
-                firs: dbData.tables.firs || []
-            });
-        } else {
-            res.json({ status: 'success', offenders: [], aliases: [], network_links: [], phone_links: [], vehicle_links: [], anomaly_flags: [], explainability_records: [], locations: [], firs: [] });
+        if (!fs.existsSync(DB_FILE)) {
+            return res.json({ status: 'success', offenders: [], aliases: [], network_links: [], phone_links: [], vehicle_links: [], anomaly_flags: [], explainability_records: [], locations: [], firs: [] });
         }
+
+        const dbData = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
+        const role = (req.query.role || req.headers['x-user-role'] || '').toLowerCase();
+        const district = (req.query.district || req.headers['x-user-district'] || '').trim();
+
+        let locations = dbData.tables.locations || [];
+        let firs = dbData.tables.firs || [];
+        let offenders = dbData.tables.offenders || [];
+        let offenderFirLinks = dbData.tables.offender_fir_link || [];
+        let aliases = dbData.tables.offender_aliases || [];
+        let networkLinks = dbData.tables.offender_network_link || [];
+        let phoneLinks = dbData.tables.offender_phone_link || [];
+        let vehicleLinks = dbData.tables.offender_vehicle_link || [];
+        let explainabilityRecords = dbData.tables.explainability_records || [];
+        let anomalyFlags = (dbData.nosql && dbData.nosql.anomaly_flags) ? dbData.nosql.anomaly_flags : [];
+
+        // ponytail: RBAC data scoping. Investigator role is restricted to assigned district. Analyst/Supervisor roles get cross-district access.
+        if (role === 'investigator' && district) {
+            locations = locations.filter(loc => (loc.district_name || loc.district_id || '').toLowerCase() === district.toLowerCase());
+            firs = firs.filter(fir => (fir.district_id || fir.district_name || '').toLowerCase() === district.toLowerCase());
+
+            const allowedFirIds = new Set(firs.map(f => f.fir_id));
+            const allowedOffenderIds = new Set(
+                offenderFirLinks
+                    .filter(link => allowedFirIds.has(link.fir_id))
+                    .map(link => link.offender_id)
+            );
+
+            offenders = offenders.filter(off => allowedOffenderIds.has(off.offender_id));
+            aliases = aliases.filter(a => allowedOffenderIds.has(a.offender_id));
+            networkLinks = networkLinks.filter(nl => allowedOffenderIds.has(nl.offender_id_a) || allowedOffenderIds.has(nl.offender_id_b));
+            phoneLinks = phoneLinks.filter(pl => allowedOffenderIds.has(pl.offender_id));
+            vehicleLinks = vehicleLinks.filter(vl => allowedOffenderIds.has(vl.offender_id));
+            anomalyFlags = anomalyFlags.filter(af => allowedOffenderIds.has(af.offender_id));
+            
+            explainabilityRecords = explainabilityRecords.filter(er => {
+                try {
+                    const sourceFirs = JSON.parse(er.source_fir_ids || '[]');
+                    return sourceFirs.some(id => allowedFirIds.has(id));
+                } catch (e) {
+                    return true;
+                }
+            });
+        }
+
+        res.json({
+            status: 'success',
+            scoped_role: role || 'unscoped',
+            scoped_district: district || 'all',
+            offenders,
+            aliases,
+            network_links: networkLinks,
+            phone_links: phoneLinks,
+            vehicle_links: vehicleLinks,
+            anomaly_flags: anomalyFlags,
+            explainability_records: explainabilityRecords,
+            locations,
+            firs
+        });
     } catch (e) {
         res.status(500).json({ status: 'error', message: e.toString() });
     }

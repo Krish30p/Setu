@@ -18,7 +18,7 @@ const DISTRICT_COORDS = {
     'Chikmagalur': { lat: 13.3161, lng: 75.7720 }
 };
 
-export default function HotspotMapPage() {
+export default function HotspotMapPage({ auth }) {
     const mapContainerRef = useRef(null);
     const mapInstanceRef = useRef(null);
     const markersRef = useRef([]);
@@ -31,7 +31,8 @@ export default function HotspotMapPage() {
     const loadGeospatialData = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:5001/api/get-graph');
+            const query = auth?.role ? `?role=${encodeURIComponent(auth.role)}&district=${encodeURIComponent(auth.district || '')}` : '';
+            const res = await fetch(`http://localhost:5001/api/get-graph${query}`);
             const data = await res.json();
             if (data.status === 'success') {
                 // Map real DB locations and resolve geo coordinates

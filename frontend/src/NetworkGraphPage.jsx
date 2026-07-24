@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import cytoscape from 'cytoscape';
 
-export default function NetworkGraphPage() {
+export default function NetworkGraphPage({ auth }) {
     const containerRef = useRef(null);
     const cyRef = useRef(null);
     const [graphData, setGraphData] = useState({ offenders: [], network_links: [], phone_links: [], vehicle_links: [] });
@@ -13,7 +13,8 @@ export default function NetworkGraphPage() {
     const fetchGraph = async () => {
         setLoading(true);
         try {
-            const res = await fetch('http://localhost:5001/api/get-graph');
+            const query = auth?.role ? `?role=${encodeURIComponent(auth.role)}&district=${encodeURIComponent(auth.district || '')}` : '';
+            const res = await fetch(`http://localhost:5001/api/get-graph${query}`);
             const data = await res.json();
             if (data.status === 'success') {
                 setGraphData(data);
@@ -79,8 +80,7 @@ export default function NetworkGraphPage() {
                     style: {
                         'border-color': '#ff5e62',
                         'border-width': '5px',
-                        'background-color': '#4a151b',
-                        'content': '⚠️ data(label)'
+                        'background-color': '#4a151b'
                     }
                 },
                 {
@@ -196,7 +196,7 @@ export default function NetworkGraphPage() {
             elements.push({
                 data: {
                     id: off.offender_id,
-                    label: off.full_name,
+                    label: hasAnomaly ? `⚠️ ${off.full_name}` : off.full_name,
                     type: 'offender',
                     hasAnomaly: hasAnomaly ? 'true' : 'false'
                 }

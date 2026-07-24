@@ -11,10 +11,56 @@ module.exports = async (context, basicIO) => {
         }
 
         const body = JSON.parse(context.body);
-        const { fir_id, generated_by = 'INV_MOCK' } = body;
+        const { fir_id, messages, title = 'SETU Investigation Chat Transcript', generated_by = 'INV_MOCK' } = body;
+
+        // ponytail: Chat-to-PDF export handler when messages array is provided
+        if (messages && Array.isArray(messages)) {
+            const formattedMessages = messages.map(msg => {
+                const sender = msg.speaker === 'user' ? 'Investigator' : 'SETU Intelligence';
+                const text = typeof msg.text === 'string' ? msg.text : JSON.stringify(msg.text);
+                return `<div style="margin-bottom:15px; padding:12px; background:${msg.speaker === 'user' ? '#f0f4fe' : '#f8fafc'}; border-left:4px solid ${msg.speaker === 'user' ? '#4f46e5' : '#10b981'}; border-radius:4px;">
+                    <div style="font-weight:bold; font-size:12px; color:#475569; margin-bottom:4px;">${sender}</div>
+                    <div style="white-space:pre-wrap; font-size:14px; color:#1e293b;">${text}</div>
+                </div>`;
+            }).join('');
+
+            const htmlContent = `
+                <html>
+                <head>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+                        .header { text-align: center; border-bottom: 2px solid #1a365d; padding-bottom: 20px; margin-bottom: 20px; }
+                        .header h1 { margin: 0; color: #1a365d; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>${title}</h1>
+                        <p>Exported by ${generated_by} on ${new Date().toISOString().substring(0, 10)}</p>
+                    </div>
+                    <div>
+                        ${formattedMessages}
+                    </div>
+                </body>
+                </html>
+            `;
+
+            const pdfBuffer = await adapter.smartbrowz.generatePDF(htmlContent);
+            const recordId = `EVID_CHAT_PDF_${Date.now()}`;
+
+            basicIO.write(JSON.stringify({
+                status: 'success',
+                type: 'chat_export',
+                evidence_record_id: recordId,
+                message_count: messages.length,
+                pdf_base64: pdfBuffer.toString('base64')
+            }));
+            context.close();
+            return;
+        }
 
         if (!fir_id) {
-            basicIO.write(JSON.stringify({ status: 'error', message: 'Missing mandatory field: fir_id' }));
+            basicIO.write(JSON.stringify({ status: 'error', message: 'Missing mandatory field: fir_id or messages' }));
             context.close();
             return;
         }
